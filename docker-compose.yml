@@ -1,0 +1,141 @@
+version: '3.8'
+
+networks:
+  moviedb_network:
+    driver: bridge
+
+services:
+  postgres:
+    container_name: moviedb_postgres
+    image: postgres:15.2-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data/volumes/postgres:/var/lib/postgresql/data
+    networks:
+      - moviedb_network
+
+  redis:
+    container_name: moviedb_redis
+    image: redis:7.0.9-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - ./data/volumes/redis:/data
+    networks:
+      - moviedb_network
+
+  rabbitmq:
+    container_name: moviedb_rabbitmq
+    image: rabbitmq:3.11.10-management-alpine
+    restart: always
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+      - '15692:15692'
+    volumes:
+      - ./data/volumes/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./data/volumes/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - moviedb_network
+
+  nginx:
+    container_name: moviedb_nginx
+    image: nginx:1.23.3-alpine
+    restart: always
+    ports:
+      - '8888:80'
+
+  maildev:
+    image: maildev/maildev
+    container_name: moviedb_maildev
+    restart: always
+    ports:
+      - '1025:1025'
+      - '8025:1080'
+    networks:
+      - moviedb_network
+
+  prometheus:
+    image: prom/prometheus:v2.38.0
+    container_name: moviedb_prometheus
+    restart: always
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./config/volumes/prometheus/:/etc/prometheus/
+      - ./data/volumes/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - moviedb_network
+
+  grafana:
+    image: grafana/grafana-oss:9.1.4
+    container_name: moviedb_grafana
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - prometheus
+    volumes:
+      - ./data/volumes/grafana/:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_DOMAIN=localhost
+    networks:
+      - moviedb_network
+
+  elasticsearch:
+    container_name: moviedb_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    networks:
+      - moviedb_network
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    volumes:
+      - ./data/volumes/elasticsearch:/usr/share/elasticsearch/data
+
+  logstash:
+    container_name: moviedb_logstash
+    image: docker.elastic.co/logstash/logstash:8.6.2
+    depends_on:
+      - elasticsearch
+    ports:
+      - 12201:12201/udp
+    volumes:
+      - ./config/volumes/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    networks:
+      - moviedb_network
+
+  kibana:
+    container_name: moviedb_kibana
+    image: docker.elastic.co/kibana/kibana:8.6.2
+    ports:
+      - '5601:5601'
+    depends_on:
+      - elasticsearch
+    networks:
+      - moviedb_network
+
+  sonarqube:
+    container_name: sonarqube
+    image: sonarqube
+    ports:
+      - '9000:9000'
+      - '9092:9092'
+    volumes:
+      - ./data/volumes/sonarqube/data:/opt/sonarqube/data
+      - ./data/volumes/sonarqube/logs:/opt/sonarqube/logs
+      - ./data/volumes/sonarqube/extensions:/opt/sonarqube/extensions

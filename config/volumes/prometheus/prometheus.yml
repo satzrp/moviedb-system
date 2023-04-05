@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+scrape_configs:
+  - job_name: 'moviedb application input'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+        labels:
+          application: 'moviedb app'
+  - job_name: 'rabbitmq metrics input'
+    metrics_path: '/metrics'
+    scrape_interval: 3s
+    static_configs:
+      - targets: ['rabbitmq:15692']
+        labels:
+          application: 'rabbitmq metrics'
+  - job_name: 'docker metrics input'
+    metrics_path: '/metrics'
+    scrape_interval: 3s
+    static_configs:
+      - targets: ['host.docker.internal:9323']
+        labels:
+          application: 'docker metrics'

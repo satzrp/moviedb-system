@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: moviedb-application
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+      ddl-auto: update
+  cache:
+    type: redis
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  mail:
+    host: localhost
+    port: 1025
+
+springdoc:
+  api-docs:
+    path: /apidocs
+  swagger-ui:
+    path: /apidocs.html
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: [ "health","prometheus", "metrics" ]
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+logging:
+  pattern:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+
+jwt:
+  secret: WXAzczZ2OXkkQiZFKUhATWNRZlRqV25acjR0N3cheiU=
+  expiration.limit: 1440000
+
+events:
+  user:
+    registration:
+      topic: user.registration
+    welcome:
+      queue: user.welcome.email
+      routingKey: user.welcome.email

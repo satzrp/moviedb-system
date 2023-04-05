@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1}.): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+    <appender name="logstash" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/moviedb.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/moviedb.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+    <appender name="rabbitmq" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        <addresses>localhost:5672</addresses>
+        <declareExchange>true</declareExchange>
+        <exchangeName>moviedb.logs</exchangeName>
+        <exchangeType>direct</exchangeType>
+        <abbreviation>36</abbreviation>
+        <applicationId>moviedb</applicationId>
+        <routingKeyPattern>moviedb.logs</routingKeyPattern>
+        <generateId>true</generateId>
+        <charset>UTF-8</charset>
+        <durable>true</durable>
+        <deliveryMode>NON_PERSISTENT</deliveryMode>
+        <addMdcAsHeaders>false</addMdcAsHeaders>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="logstash" />
+        <appender-ref ref="console" />
+        <appender-ref ref="rabbitmq" />
+    </root>
+</configuration>
