@@ -34,6 +34,7 @@ public class WebSecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/api/v1/movies/**")
                 .authenticated()
                 .requestMatchers(
+                        "/images/**",
                         "/api/v1/users/**",
                         "/api/v1/movies/**",
                         "/actuator/**",
