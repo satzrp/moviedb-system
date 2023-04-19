@@ -1,4 +1,4 @@
-import { MovieCard } from "./components/movie-card";
+import MovieCard from "./components/movie-card";
 import { BASE_URL, API_URL } from "./config";
 
 async function fetchAllMovies() {

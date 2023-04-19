@@ -1,5 +1,6 @@
 import Image from "next/image";
-export const MovieCard = ({ movieId, movieName, movieDesc, avatarUrl }) => {
+
+const MovieCard = ({ movieId, movieName, movieDesc, avatarUrl }) => {
   console.log(movieId);
   return (
     <div className="col-md-4 mt-4">
@@ -17,3 +18,5 @@ export const MovieCard = ({ movieId, movieName, movieDesc, avatarUrl }) => {
     </div>
   );
 };
+
+export default MovieCard;
