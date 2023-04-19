@@ -2,7 +2,6 @@ import { MovieCard } from "./components/movie-card";
 import { BASE_URL, API_URL } from "./config";
 
 async function fetchAllMovies() {
-  console.log(`${API_URL}/movies`);
   const response = await fetch(`${API_URL}/movies`, {
     next: {
       revalidate: 60,
@@ -15,7 +14,7 @@ async function fetchAllMovies() {
 const Home = async () => {
   const movies = await fetchAllMovies();
   return (
-    <main>
+    <section>
       <div className="container ps-4 pe-4">
         <div className="row pb-5">
           {movies.map((movie) => (
@@ -29,7 +28,7 @@ const Home = async () => {
           ))}
         </div>
       </div>
-    </main>
+    </section>
   );
 };
 
