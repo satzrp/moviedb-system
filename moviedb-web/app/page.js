@@ -19,8 +19,8 @@ const Home = async () => {
         <div className="row pb-5">
           {movies.map((movie) => (
             <MovieCard
-              key={movie.movieId}
-              movieId={movie.movieId}
+              key={movie.id}
+              movieId={movie.id}
               movieName={movie.name}
               movieDesc={movie.description}
               avatarUrl={`${BASE_URL}${movie.avatarUrl}`}

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Review = ({ review }) => {
   const { user, reviewContent, createdAt } = review;
@@ -16,9 +17,9 @@ const Review = ({ review }) => {
           />
           <div>
             <h6 className="fw-bold mb-1">
-              <a className="name-link" href={`/users/${userId}`}>
+              <Link className="name-link" href={`/users/${userId}`}>
                 {name}
-              </a>
+              </Link>
             </h6>
             <div className="d-flex align-items-center mb-3">
               <p className="mb-0 fw-light">
