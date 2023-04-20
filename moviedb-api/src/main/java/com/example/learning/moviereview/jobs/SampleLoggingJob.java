@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Configuration
 @Slf4j
 public class SampleLoggingJob {
-    @Scheduled(fixedRate = 1000 * 10 * 60)
+    @Scheduled(fixedRate = 1000 * 10 * 10)
     public void scheduleInfoLog() {
         log.info("Logging at: {}", LocalDateTime.now());
     }

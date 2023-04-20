@@ -28,6 +28,7 @@ public class UserController {
         this.jwtManager = jwtManager;
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/register")
     public ResponseEntity<UserAuthenticationResponse> register(@RequestBody UserRegisterRequest userRegisterRequest)
             throws UserEmailAlreadyExistsException {
@@ -40,6 +41,7 @@ public class UserController {
         return ResponseEntity.ok(userAuthResponse);
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public ResponseEntity<UserAuthenticationResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
         var user = userService.login(userLoginRequest.email(), userLoginRequest.password());

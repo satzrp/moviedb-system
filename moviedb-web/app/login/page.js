@@ -1,4 +1,37 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { httpPost } from "../api-utils";
+import { API_URL } from "../config";
+import { useAuthContext } from "../context/auth";
+
 const Login = () => {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { user, setUser } = useAuthContext();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const response = await httpPost(`${API_URL}/users/login`, { email, password });
+    if (response && response.status === 403) {
+      setError("Invalid Login");
+    } else {
+      const user = await response.json();
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+      router.push("/");
+    }
+  };
+
+  useEffect(() => {
+    if (!!user) {
+      router.push("/");
+    }
+  }, [user, router]);
+
   return (
     <div className="container login-container">
       <div className="row">
@@ -7,7 +40,13 @@ const Login = () => {
           <div className="card border-0 shadow rounded-3 my-5">
             <div className="card-body p-4 p-sm-5">
               <h5 className="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
-              <form method="POST" action="?/login">
+              <form onSubmit={handleLogin}>
+                {!!error && (
+                  <div class="fixed-top alert alert-danger alert-dismissible fs-3 text-center fade show" role="alert">
+                    {error}
+                    <button type="button" class="btn-close fs-5" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                )}
                 <div className="form-floating mb-3">
                   <input
                     required
@@ -16,6 +55,8 @@ const Login = () => {
                     className="form-control"
                     id="floatingInput"
                     placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <label htmlFor="floatingInput">Email address</label>
                 </div>
@@ -27,6 +68,8 @@ const Login = () => {
                     className="form-control"
                     id="floatingPassword"
                     placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <label htmlFor="floatingPassword">Password</label>
                 </div>
