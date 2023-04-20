@@ -1,6 +1,6 @@
 const MovieMetadata = ({ metadata: { releaseYear, movieLength, genre, actors, director } }) => {
   return (
-    <ul class="list-unstyled">
+    <ul className="list-unstyled">
       <li>Release Year: {releaseYear}</li>
       <li>Movie Length: {movieLength} mins</li>
       <li>Genre: {genre}</li>

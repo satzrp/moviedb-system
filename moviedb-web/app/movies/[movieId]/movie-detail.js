@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BASE_URL } from "@/app/config";
-import MovieMetadata from "@/app/components/movie-metadata";
+import MovieMetadata from "./movie-metadata";
 
 const MovieDetail = ({ movieDetails }) => {
   const metadata = {

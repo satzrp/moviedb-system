@@ -1,14 +1,9 @@
 import MovieCard from "./components/movie-card";
+import { httpGet } from "./api-utils";
 import { BASE_URL, API_URL } from "./config";
 
 async function fetchAllMovies() {
-  const response = await fetch(`${API_URL}/movies`, {
-    next: {
-      revalidate: 60,
-    },
-  });
-  const movies = await response.json();
-  return movies;
+  return await httpGet(`${API_URL}/movies`);
 }
 
 const Home = async () => {
