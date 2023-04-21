@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { useAuthContext } from "../context/auth";
 
-const handleLogout = () => {};
-
 const AuthButtons = () => {
-  const { user } = useAuthContext();
+  const { user, setUser } = useAuthContext();
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
   return !!user ? (
     <div className="d-flex align-items-center">
       <span className="user-text">Logged in as: {user.email}</span>
