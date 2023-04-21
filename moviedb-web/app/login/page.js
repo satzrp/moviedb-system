@@ -16,12 +16,12 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const response = await httpPost(`${API_URL}/users/login`, { email, password });
-    if (response && response.status === 403) {
-      setError("Invalid Login");
+    const data = await response.json();
+    if (response.status === 403 && data.status === "FAIL") {
+      setError(data.message);
     } else {
-      const user = await response.json();
-      localStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
+      localStorage.setItem("user", JSON.stringify(data.payload));
+      setUser(data.payload);
       router.push("/");
     }
   };

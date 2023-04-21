@@ -17,12 +17,12 @@ const Register = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     const response = await httpPost(`${API_URL}/users/register`, { email, password, name });
-    if (response && response.status === 403) {
-      setError("Invalid Registration");
+    const data = await response.json();
+    if (response.status === 403 && data.status === "FAIL") {
+      setError(data.message);
     } else {
-      const user = await response.json();
-      localStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
+      localStorage.setItem("user", JSON.stringify(data.payload));
+      setUser(data.payload);
       router.push("/");
     }
   };
