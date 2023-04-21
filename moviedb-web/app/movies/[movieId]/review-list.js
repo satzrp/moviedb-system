@@ -1,5 +1,6 @@
 import Review from "./review";
 
+// TODO: update component when new review is posted
 const ReviewList = ({ reviews }) => {
   return (
     <div className="card text-dark my-4">
