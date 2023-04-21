@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useAuthContext } from "../context/auth";
+import { usePathname } from "next/navigation";
 
 const AuthButtons = () => {
   const { user, setUser } = useAuthContext();
@@ -8,6 +9,7 @@ const AuthButtons = () => {
     localStorage.removeItem("user");
     setUser(null);
   };
+  const currentPath = usePathname();
   return !!user ? (
     <div className="d-flex align-items-center">
       <span className="user-text">Logged in as: {user.email}</span>
@@ -17,10 +19,10 @@ const AuthButtons = () => {
     </div>
   ) : (
     <div className="d-flex align-items-center">
-      <Link href="/login" className="btn btn-primary px-3 me-2">
+      <Link href={`/login?redirect=${currentPath}`} className="btn btn-primary px-3 me-2">
         Login
       </Link>
-      <Link href="/signup" className="btn btn-primary me-3">
+      <Link href={`/signup?redirect=${currentPath}`} className="btn btn-primary me-3">
         Sign up
       </Link>
     </div>

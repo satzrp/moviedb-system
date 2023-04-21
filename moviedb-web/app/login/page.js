@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { httpPost } from "../api-utils";
 import { API_URL } from "../config";
 import { useAuthContext } from "../context/auth";
 
 const Login = () => {
   const router = useRouter();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect") ?? "/";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { user, setUser } = useAuthContext();
-
   const handleLogin = async (e) => {
     e.preventDefault();
     const response = await httpPost(`${API_URL}/users/login`, { email, password });
@@ -22,15 +23,15 @@ const Login = () => {
     } else {
       localStorage.setItem("user", JSON.stringify(data.payload));
       setUser(data.payload);
-      router.push("/");
+      router.push(redirectTo);
     }
   };
 
   useEffect(() => {
     if (!!user) {
-      router.push("/");
+      router.push(redirectTo);
     }
-  }, [user, router]);
+  }, [user, router, redirectTo]);
 
   return (
     <div className="container login-container">

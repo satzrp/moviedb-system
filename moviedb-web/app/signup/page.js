@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { httpPost } from "../api-utils";
 import { API_URL } from "../config";
@@ -8,6 +8,8 @@ import { useAuthContext } from "../context/auth";
 
 const Register = () => {
   const router = useRouter();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect") ?? "/";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,15 +25,15 @@ const Register = () => {
     } else {
       localStorage.setItem("user", JSON.stringify(data.payload));
       setUser(data.payload);
-      router.push("/");
+      router.push(redirectTo);
     }
   };
 
   useEffect(() => {
     if (!!user) {
-      router.push("/");
+      router.push(redirectTo);
     }
-  }, [user, router]);
+  }, [user, router, redirectTo]);
 
   return (
     <div className="container login-container">
