@@ -4,6 +4,7 @@ import com.example.learning.moviereview.movie.Review;
 import com.example.learning.moviereview.movie.dto.ReviewDetailView;
 import com.example.learning.moviereview.movie.dto.ReviewView;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.learning.moviereview.mapper.MovieMapper.movieToMovieView;
@@ -25,6 +26,7 @@ public class ReviewMapper {
         return reviews
                 .stream()
                 .map(ReviewMapper::reviewToReviewView)
+                .sorted((reviewOne, reviewTwo) -> reviewTwo.createdAt().compareTo(reviewOne.createdAt()))
                 .toList();
     }
 

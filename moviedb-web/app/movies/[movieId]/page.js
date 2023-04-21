@@ -5,7 +5,7 @@ import { API_URL } from "@/app/config";
 import AddReview from "./add-review";
 
 async function fetchMovie(movieId) {
-  return await httpGet(`${API_URL}/movies/${movieId}`);
+  return await httpGet(`${API_URL}/movies/${movieId}`, 1);
 }
 
 const MovieDetailPage = async ({ params: { movieId } }) => {
@@ -16,7 +16,7 @@ const MovieDetailPage = async ({ params: { movieId } }) => {
         <div className="row d-flex justify-content-center">
           <div className="col-md-9 col-lg-9">
             <MovieDetail movieDetails={movie.movieDetails} />
-            <AddReview />
+            <AddReview movieId={movie.movieDetails.id} />
             <ReviewList reviews={movie.reviews} />
           </div>
         </div>

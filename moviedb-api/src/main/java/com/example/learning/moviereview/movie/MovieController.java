@@ -51,6 +51,7 @@ public class MovieController {
         return ResponseEntity.ok(reviewsToReviewDetailViews(reviews));
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/{movieId}/reviews")
     public ResponseEntity<String> addNewReview(
             @PathVariable Integer movieId, @RequestBody AddReviewRequest addReviewRequest) {

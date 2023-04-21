@@ -1,10 +1,21 @@
 "use client";
+import { httpPost } from "@/app/api-utils";
+import { API_URL } from "@/app/config";
 import { useAuthContext } from "@/app/context/auth";
 import Image from "next/image";
+import { useState } from "react";
 
-// TODO: Post review to backend and persist in the database
-const AddReview = () => {
+const AddReview = ({ movieId }) => {
   const { user } = useAuthContext();
+  const [reviewContent, setReviewContent] = useState();
+  const handleAddReview = async (e) => {
+    e.preventDefault();
+    const response = await httpPost(`${API_URL}/movies/${movieId}/reviews`, { reviewContent }, user.token);
+    if (response && response.status === 201) {
+      setReviewContent("");
+    }
+    // TODO: handle error scenario
+  };
   return !!user ? (
     <div className="card">
       <div className="card-body p-4">
@@ -17,8 +28,8 @@ const AddReview = () => {
             height="40"
           />
           <div className="w-100">
-            <form>
-              <label className="form-label fw-light" for="reviewContent">
+            <form onSubmit={handleAddReview}>
+              <label className="form-label fw-light" htmlFor="reviewContent">
                 What is your view about the movie?
               </label>
               <div className="form-outline">
@@ -28,7 +39,9 @@ const AddReview = () => {
                   name="reviewContent"
                   id="reviewContent"
                   rows="4"
-                  maxlength="300"
+                  maxLength="300"
+                  value={reviewContent}
+                  onChange={(e) => setReviewContent(e.target.value)}
                 ></textarea>
               </div>
               <div className="d-flex justify-content-between mt-3">
