@@ -38,6 +38,7 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
+    // TODO: send valid response for MovieNotFoundException
     @GetMapping("/{movieId}")
     public ResponseEntity<MovieDetailView> getMovieById(@PathVariable Integer movieId) throws MovieNotFoundException {
         var movie = movieToMovieDetailView(this.movieService.getMovieById(movieId));
